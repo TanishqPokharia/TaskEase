@@ -2,7 +2,6 @@
 
 TaskEase is a user-friendly and modular todo list app built using Android Studio and powered by Firebase Firestore for CRUD applications. It simplifies task management, helping you stay organized and productive.
 
-Apk is present in the repository
 
 App Demo Video - https://drive.google.com/file/d/1S7EgGQb1LqDDCUb-KFRv6FsIutUq-3ta/view?usp=sharing
 
@@ -25,6 +24,8 @@ To use TaskEase, follow these steps:
 
    ```shell
    git clone https://github.com/TanishqPokharia/TaskEase.git
+
+2. To get the apk, go to Build->Build bundles/apks->build apk
 
 ## Usage
 
