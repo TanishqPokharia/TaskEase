@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1038623671350",
+    "project_id": "to-do-list-60c81",
+    "storage_bucket": "to-do-list-60c81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038623671350:android:974b3aba71c848ee418497",
+        "android_client_info": {
+          "package_name": "com.tanishq.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038623671350-v0l1s1f979rssf68ufjrqed2q41kd6nd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjr2TtMvqF0rO6F4b5rvAB184dElQxIV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038623671350-v0l1s1f979rssf68ufjrqed2q41kd6nd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
