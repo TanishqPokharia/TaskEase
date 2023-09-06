@@ -29,10 +29,10 @@ To use TaskEase, follow these steps:
 
 ## Usage
 
-1. Adding Tasks: Tap the "+" floating action button to create a new task. Enter the task name and save it.
+1. Adding Tasks: Tap the "+" floating action button to create a new task. Enter the task and save it.
 
-2. Editing Tasks: Tap on an existing task to edit its details.
+2. Updating Tasks: Tap on an edit button of existing task to edit and save the task.
 
-3. Mark as Completed: Swipe a task to the right to mark it as completed. Swipe it to the left to delete it.
+3. Delete Tasks: Tap on the trash button to delete the task.
 
 4. Sync Across Devices: Your tasks will be automatically synchronized across devices using Firebase Firestore.
