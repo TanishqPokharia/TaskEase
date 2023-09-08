@@ -13,8 +13,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.tanishq.todolist.R
 import com.tanishq.todolist.databinding.FragmentHomeBinding
-import com.tanishq.todolist.databinding.FragmentPopupBinding
 import com.tanishq.todolist.utils.TaskData
 import com.tanishq.todolist.utils.ToDoAdapter
 
@@ -23,19 +23,16 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
     private lateinit var auth:FirebaseAuth
     private var db = Firebase.firestore
     private val taskref = db.collection("TaskEase")
-    private lateinit var bindingPopup: FragmentPopupBinding
     private lateinit var navController:NavController
     private lateinit var binding: FragmentHomeBinding
     private var popupFragment: PopupFragment? = null
     private lateinit var adapter:ToDoAdapter
-    private lateinit var mList:MutableList<TaskData>
+    private lateinit var mutableTaskList:MutableList<TaskData>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentHomeBinding.inflate(inflater,container,false)
-        bindingPopup = FragmentPopupBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -51,8 +48,8 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         navController = Navigation.findNavController(view)
         binding.recyclerView2.setHasFixedSize(true)
         binding.recyclerView2.layoutManager = LinearLayoutManager(context)
-        mList = mutableListOf()
-        adapter = ToDoAdapter(mList)
+        mutableTaskList = mutableListOf()
+        adapter = ToDoAdapter(mutableTaskList)
         adapter.setListener(this)
         binding.recyclerView2.adapter = adapter
     }
@@ -61,7 +58,7 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         taskref.get().addOnSuccessListener{documents->
             for(document in documents){
                 val task = TaskData(document.id,document.data["task"].toString())
-                mList.add(task)
+                mutableTaskList.add(task)
             }
             adapter.notifyDataSetChanged()
         }
@@ -78,16 +75,22 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
             )
         }
 
+        binding.logoutbtn.setOnClickListener {
+            auth.signOut()
+            navController.navigate(R.id.action_homeFragment_to_signInFragment)
+            Toast.makeText(requireContext(),"Logged Out",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun saveTask(task: String, et: TextInputEditText) {
         val map = hashMapOf(
             "task" to task
         )
-        db.collection("TaskEase").document("task${mList.size}").set(map).addOnSuccessListener {
+        db.collection("TaskEase").document("task${mutableTaskList.size}").set(map).addOnSuccessListener {
             Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
         }
-        mList.clear()
+        mutableTaskList.clear()
         getFirebaseData()
 
     }
@@ -99,14 +102,14 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         taskref.document(taskData.taskid).update(map).addOnSuccessListener{
             Toast.makeText(requireContext(),"Task updated",Toast.LENGTH_SHORT).show()
         }
-        mList.clear()
+        mutableTaskList.clear()
         getFirebaseData()
     }
 
     override fun onDeleteTaskBtnClicked(taskData: TaskData) {
         taskref.document(taskData.taskid).delete().addOnCompleteListener {
             if(it.isSuccessful){
-                mList.clear()
+                mutableTaskList.clear()
                 getFirebaseData()
                 Toast.makeText(requireContext(),"Task Deleted",Toast.LENGTH_SHORT).show()
             }else{

@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">TaskEase</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_email">Enter email</string>
+    <string name="already_have_an_account_sign_in"><u>Already have an account? Sign In</u></string>
+    <string name="proceed_image_button">Proceed image button</string>
+    <string name="sign_in">Sign In</string>
+    <string name="do_not_have_an_account_sign_up"><u>Do not have an account? Sign Up</u></string>
+    <string name="log_out">Log Out</string>
+    <string name="fab_button">fab button</string>
 </resources>
