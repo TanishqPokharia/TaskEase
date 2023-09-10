@@ -20,19 +20,19 @@ import com.tanishq.todolist.utils.ToDoAdapter
 
 class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
     ToDoAdapter.ToDoAdapterClickInterface {
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     private var db = Firebase.firestore
     private val taskref = db.collection("TaskEase")
-    private lateinit var navController:NavController
+    private lateinit var navController: NavController
     private lateinit var binding: FragmentHomeBinding
     private var popupFragment: PopupFragment? = null
-    private lateinit var adapter:ToDoAdapter
-    private lateinit var mutableTaskList:MutableList<TaskData>
+    private lateinit var adapter: ToDoAdapter
+    private lateinit var mutableTaskList: MutableList<TaskData>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(inflater,container,false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,42 +43,43 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         registerEvents()
     }
 
-    private fun init(view:View){
+    private fun init(view: View) {
         auth = FirebaseAuth.getInstance()
         navController = Navigation.findNavController(view)
-        binding.recyclerView2.setHasFixedSize(true)
-        binding.recyclerView2.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
         mutableTaskList = mutableListOf()
         adapter = ToDoAdapter(mutableTaskList)
         adapter.setListener(this)
-        binding.recyclerView2.adapter = adapter
+        binding.recyclerView.adapter = adapter
     }
 
-    private fun getFirebaseData(){
-        taskref.get().addOnSuccessListener{documents->
-            for(document in documents){
-                val task = TaskData(document.id,document.data["task"].toString())
+    private fun getFirebaseData() {
+        taskref.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                val task = TaskData(document.id, document.data["task"].toString())
                 mutableTaskList.add(task)
             }
             adapter.notifyDataSetChanged()
         }
     }
-    private fun registerEvents(){
-        binding.fabbtn.setOnClickListener{
+
+    private fun registerEvents() {
+        binding.fabbtn.setOnClickListener {
             //prevent multipleinstances of popup fragment
-            if(popupFragment!=null)
+            if (popupFragment != null)
                 childFragmentManager.beginTransaction().remove(popupFragment!!).commit()
             popupFragment = PopupFragment()
             popupFragment!!.setListener(this)
             popupFragment!!.show(
-                childFragmentManager,PopupFragment.tag
+                childFragmentManager, PopupFragment.tag
             )
         }
 
         binding.logoutbtn.setOnClickListener {
             auth.signOut()
             navController.navigate(R.id.action_homeFragment_to_signInFragment)
-            Toast.makeText(requireContext(),"Logged Out",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -87,20 +88,21 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         val map = hashMapOf(
             "task" to task
         )
-        db.collection("TaskEase").document("task${mutableTaskList.size}").set(map).addOnSuccessListener {
-            Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
-        }
+        db.collection("TaskEase").document("task${mutableTaskList.size}").set(map)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
+            }
         mutableTaskList.clear()
         getFirebaseData()
 
     }
 
-    override fun updateTask(taskData: TaskData,task: String, et: TextInputEditText) {
+    override fun updateTask(taskData: TaskData, task: String, et: TextInputEditText) {
         val map = mapOf(
             "task" to task
         )
-        taskref.document(taskData.taskid).update(map).addOnSuccessListener{
-            Toast.makeText(requireContext(),"Task updated",Toast.LENGTH_SHORT).show()
+        taskref.document(taskData.taskid).update(map).addOnSuccessListener {
+            Toast.makeText(requireContext(), "Task updated", Toast.LENGTH_SHORT).show()
         }
         mutableTaskList.clear()
         getFirebaseData()
@@ -108,24 +110,24 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
 
     override fun onDeleteTaskBtnClicked(taskData: TaskData) {
         taskref.document(taskData.taskid).delete().addOnCompleteListener {
-            if(it.isSuccessful){
+            if (it.isSuccessful) {
                 mutableTaskList.clear()
                 getFirebaseData()
-                Toast.makeText(requireContext(),"Task Deleted",Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(requireContext(),it.exception?.message,Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Task Deleted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), it.exception?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     override fun onEditTaskBtnClicked(taskData: TaskData) {
-        if(popupFragment!=null){
+        if (popupFragment != null) {
             childFragmentManager.beginTransaction().remove(popupFragment!!).commit()
         }
 
-        popupFragment = PopupFragment.newinstance(taskData.taskid,taskData.task)
+        popupFragment = PopupFragment.newinstance(taskData.taskid, taskData.task)
         popupFragment!!.setListener(this)
-        popupFragment!!.show(childFragmentManager,PopupFragment.tag)
+        popupFragment!!.show(childFragmentManager, PopupFragment.tag)
     }
 
 }

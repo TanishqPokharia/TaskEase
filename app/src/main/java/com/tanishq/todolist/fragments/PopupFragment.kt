@@ -73,13 +73,12 @@ class PopupFragment : DialogFragment() {
 
         binding.addtaskbtn.setOnClickListener {
             val task = binding.todoEt.text.toString()
-            if (task.isNotEmpty()){
+            if (task.isNotEmpty()) {
                 if (taskData == null) {
                     listener.saveTask(task, binding.todoEt)
-                }
-                else{
+                } else {
                     taskData!!.task = task
-                    listener.updateTask(taskData!!,task, binding.todoEt)
+                    listener.updateTask(taskData!!, task, binding.todoEt)
                 }
 
             }
@@ -91,7 +90,7 @@ class PopupFragment : DialogFragment() {
     //also it is an easy way to interact between home and popup fragment, we can define functions in home and then use them in popup fragment
     interface DialogNextBtnClickListener {
         fun saveTask(task: String, et: TextInputEditText)
-        fun updateTask(taskData:TaskData,task: String,et:TextInputEditText)
+        fun updateTask(taskData: TaskData, task: String, et: TextInputEditText)
     }
 
 }

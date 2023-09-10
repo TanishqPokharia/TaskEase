@@ -25,7 +25,7 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentSignInBinding.inflate(inflater,container,false)
+        binding = FragmentSignInBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -66,7 +66,7 @@ class SignInFragment : Fragment() {
                         }
                         binding.progressbar.visibility = View.GONE
                     })
-            }else{
+            } else {
                 Toast.makeText(
                     requireContext(),
                     "Error: Empty fields",
@@ -76,7 +76,7 @@ class SignInFragment : Fragment() {
 
         }
 
-        binding.textView2.setOnClickListener{
+        binding.textView2.setOnClickListener {
             navController.navigate(R.id.action_signInFragment_to_signupFragment)
         }
     }
