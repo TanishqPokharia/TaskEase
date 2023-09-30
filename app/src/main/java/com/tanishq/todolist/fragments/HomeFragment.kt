@@ -62,7 +62,7 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
 
             userTasksCollection.get().addOnSuccessListener { documents ->
                 for (document in documents) {
-                    val task = TaskData(document.id, document.data["task"].toString())
+                    val task = TaskData(document.id, document.data["task"].toString(),document.data["check"].toString())
                     mutableTaskList.add(task)
                 }
                 adapter.notifyDataSetChanged()
@@ -96,23 +96,25 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
             val userTasksCollection = db.collection(userId)
 
             val map = hashMapOf(
-                "task" to task
+                "task" to task,
+                "check" to "false"
             )
 
             userTasksCollection.add(map)
                 .addOnSuccessListener { documentReference ->
                     Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
                     val taskId = documentReference.id
-                    val taskData = TaskData(taskId, task)
+                    val taskData = TaskData(taskId, task,"false")
                     mutableTaskList.add(taskData)
                     adapter.notifyDataSetChanged()
                 }
         }
     }
 
-    override fun updateTask(taskData: TaskData, task: String, et: TextInputEditText) {
+    override fun updateTask(taskData: TaskData,check:String, task: String, et: TextInputEditText) {
         val map = mapOf(
-            "task" to task
+            "task" to task,
+            "check" to check
         )
         val userTasksCollection = db.collection(auth.currentUser?.uid ?: "")
         userTasksCollection.document(taskData.taskid).update(map).addOnSuccessListener {
@@ -145,5 +147,16 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
         popupFragment!!.setListener(this)
         popupFragment!!.show(childFragmentManager, PopupFragment.tag)
     }
+
+    override fun onCheckBoxClicked(taskData: TaskData, task:String,check: Boolean) {
+        val map = mapOf(
+            "task" to task,
+            "check" to check
+        )
+        val userTasksCollection = db.collection(auth.currentUser?.uid ?: "")
+        userTasksCollection.document(taskData.taskid).update(map)
+    }
+
+
 
 }

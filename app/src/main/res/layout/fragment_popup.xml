@@ -5,13 +5,12 @@
     android:layout_width="400dp"
     android:layout_height="wrap_content"
     tools:context=".fragments.PopupFragment"
-    android:backgroundTint="@color/peach"
+android:backgroundTint="@color/peach"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTintMode="screen"
         >
         <ImageView
             android:id="@+id/todoClose"
@@ -20,7 +19,8 @@
             android:layout_marginTop="12dp"
             android:src="@drawable/baseline_close_24"
             app:layout_constraintEnd_toEndOf="@+id/cardView1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/close" />
 
 
         <com.google.android.material.card.MaterialCardView
@@ -48,9 +48,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@color/white"
-                    android:hint="Enter task here..."
+                    android:hint="@string/enter_task_here"
                     android:inputType="textEmailAddress"
                     android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
                     android:paddingTop="15dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -65,6 +66,7 @@
             android:layout_marginBottom="12dp"
             app:layout_constraintTop_toBottomOf="@+id/cardView1"
             app:layout_constraintEnd_toEndOf="@+id/cardView1"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

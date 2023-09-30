@@ -10,4 +10,7 @@
     <string name="do_not_have_an_account_sign_up"><u>Do not have an account? Sign Up</u></string>
     <string name="log_out">Log Out</string>
     <string name="fab_button">fab button</string>
+    <string name="close">close</string>
+    <string name="enter_task_here">Enter task here...</string>
+    <string name="add">add</string>
 </resources>

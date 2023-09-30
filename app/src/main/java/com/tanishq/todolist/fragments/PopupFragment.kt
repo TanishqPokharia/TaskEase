@@ -1,28 +1,24 @@
 package com.tanishq.todolist.fragments
 
 import android.os.Bundle
+import android.text.BoringLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.FirebaseApiNotAvailableException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tanishq.todolist.databinding.FragmentHomeBinding
 import com.tanishq.todolist.databinding.FragmentPopupBinding
+import com.tanishq.todolist.databinding.TaskitemBinding
 import com.tanishq.todolist.utils.TaskData
-import com.tanishq.todolist.utils.ToDoAdapter
 
 
 class PopupFragment : DialogFragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentPopupBinding
+    private lateinit var binding2:TaskitemBinding
     private lateinit var listener: DialogNextBtnClickListener
     private var db = Firebase.firestore
     private var taskData: TaskData? = null
@@ -49,6 +45,7 @@ class PopupFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPopupBinding.inflate(inflater, container, false)
+        binding2 = TaskitemBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -57,7 +54,9 @@ class PopupFragment : DialogFragment() {
         if (arguments != null) {
             taskData = TaskData(
                 arguments?.getString("taskid").toString(),
-                arguments?.getString("task").toString()
+                arguments?.getString("task").toString(),
+                arguments?.getString("check").toString()
+
             )
             binding.todoEt.setText(taskData?.task)
         }
@@ -78,7 +77,7 @@ class PopupFragment : DialogFragment() {
                     listener.saveTask(task, binding.todoEt)
                 } else {
                     taskData!!.task = task
-                    listener.updateTask(taskData!!, task, binding.todoEt)
+                    listener.updateTask(taskData!!, binding2.checkBox.isChecked.toString(),task, binding.todoEt)
                 }
 
             }
@@ -90,7 +89,7 @@ class PopupFragment : DialogFragment() {
     //also it is an easy way to interact between home and popup fragment, we can define functions in home and then use them in popup fragment
     interface DialogNextBtnClickListener {
         fun saveTask(task: String, et: TextInputEditText)
-        fun updateTask(taskData: TaskData, task: String, et: TextInputEditText)
+        fun updateTask(taskData: TaskData,check:String, task: String, et: TextInputEditText)
     }
 
 }

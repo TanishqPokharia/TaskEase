@@ -32,6 +32,13 @@ class ToDoAdapter(private val list: MutableList<TaskData>) :
                 binding.editTask.setOnClickListener {
                     listener?.onEditTaskBtnClicked(this)
                 }
+                binding.checkBox.setOnCheckedChangeListener { compoundButton, b ->
+                    if(b){
+                        listener?.onCheckBoxClicked(this,this.task,binding.checkBox.isChecked)
+                    }
+                }
+                binding.checkBox.isChecked = list[position].check=="true"
+
             }
         }
     }
@@ -39,5 +46,8 @@ class ToDoAdapter(private val list: MutableList<TaskData>) :
     interface ToDoAdapterClickInterface{
         fun onDeleteTaskBtnClicked(taskData: TaskData)
         fun onEditTaskBtnClicked(taskData: TaskData)
+
+        fun onCheckBoxClicked(taskData: TaskData,task:String,check:Boolean)
+
     }
 }
