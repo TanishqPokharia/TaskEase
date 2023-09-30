@@ -22,12 +22,12 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
     ToDoAdapter.ToDoAdapterClickInterface {
     private lateinit var auth: FirebaseAuth
     private var db = Firebase.firestore
-    private val taskref = db.collection("TaskEase")
     private lateinit var navController: NavController
     private lateinit var binding: FragmentHomeBinding
     private var popupFragment: PopupFragment? = null
     private lateinit var adapter: ToDoAdapter
     private lateinit var mutableTaskList: MutableList<TaskData>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,18 +55,24 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
     }
 
     private fun getFirebaseData() {
-        taskref.get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                val task = TaskData(document.id, document.data["task"].toString())
-                mutableTaskList.add(task)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val userTasksCollection = db.collection(userId)
+
+            userTasksCollection.get().addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val task = TaskData(document.id, document.data["task"].toString())
+                    mutableTaskList.add(task)
+                }
+                adapter.notifyDataSetChanged()
             }
-            adapter.notifyDataSetChanged()
         }
     }
 
     private fun registerEvents() {
         binding.fabbtn.setOnClickListener {
-            //prevent multipleinstances of popup fragment
+            // Prevent multiple instances of the popup fragment
             if (popupFragment != null)
                 childFragmentManager.beginTransaction().remove(popupFragment!!).commit()
             popupFragment = PopupFragment()
@@ -81,27 +87,35 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
             navController.navigate(R.id.action_homeFragment_to_signInFragment)
             Toast.makeText(requireContext(), "Logged Out", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     override fun saveTask(task: String, et: TextInputEditText) {
-        val map = hashMapOf(
-            "task" to task
-        )
-        db.collection("TaskEase").document("task${mutableTaskList.size}").set(map)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
-            }
-        mutableTaskList.clear()
-        getFirebaseData()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val userTasksCollection = db.collection(userId)
 
+            val map = hashMapOf(
+                "task" to task
+            )
+
+            userTasksCollection.add(map)
+                .addOnSuccessListener { documentReference ->
+                    Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
+                    val taskId = documentReference.id
+                    val taskData = TaskData(taskId, task)
+                    mutableTaskList.add(taskData)
+                    adapter.notifyDataSetChanged()
+                }
+        }
     }
 
     override fun updateTask(taskData: TaskData, task: String, et: TextInputEditText) {
         val map = mapOf(
             "task" to task
         )
-        taskref.document(taskData.taskid).update(map).addOnSuccessListener {
+        val userTasksCollection = db.collection(auth.currentUser?.uid ?: "")
+        userTasksCollection.document(taskData.taskid).update(map).addOnSuccessListener {
             Toast.makeText(requireContext(), "Task updated", Toast.LENGTH_SHORT).show()
         }
         mutableTaskList.clear()
@@ -109,7 +123,8 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
     }
 
     override fun onDeleteTaskBtnClicked(taskData: TaskData) {
-        taskref.document(taskData.taskid).delete().addOnCompleteListener {
+        val userTasksCollection = db.collection(auth.currentUser?.uid ?: "")
+        userTasksCollection.document(taskData.taskid).delete().addOnCompleteListener {
             if (it.isSuccessful) {
                 mutableTaskList.clear()
                 getFirebaseData()
@@ -119,6 +134,7 @@ class HomeFragment : Fragment(), PopupFragment.DialogNextBtnClickListener,
             }
         }
     }
+
 
     override fun onEditTaskBtnClicked(taskData: TaskData) {
         if (popupFragment != null) {
