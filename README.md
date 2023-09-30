@@ -3,8 +3,7 @@
 TaskEase is a user-friendly and modular todo list app built using Android Studio and powered by Firebase Firestore for CRUD applications. It simplifies task management, helping you stay organized and productive.
 
 
-Updated App Demo Video -[ https://drive.google.com/file/d/1S7EgGQb1LqDDCUb-KFRv6FsIutUq-3ta/view?usp=sharing](https://drive.google.com/file/d/1OXzPunZ0pq2WJSasu0JK3jNJMPSNUX7l/view?usp=sharing)
-
+Updated App Demo Video -https://drive.google.com/file/d/1yPX5cPjJzBsttprWKLOOZjN96pfGhvn9/view?usp=sharing
 
 
 ## Features
@@ -37,4 +36,6 @@ To use TaskEase, follow these steps:
 
 3. Delete Tasks: Tap on the trash button to delete the task.
 
-4. Sync Across Devices: Your tasks will be automatically synchronized across devices using Firebase Firestore.
+4. Checkbox: Keep a track of tasks done using provided checkbox.
+
+5. Sync Across Devices: Your tasks will be automatically synchronized across devices using Firebase Firestore.
